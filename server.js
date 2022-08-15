@@ -1,3 +1,20 @@
+const { Sequelize } = require('sequelize')
+// SEQUELIZE CONNECTION
+/*const sequelize = new Sequelize({
+    storage: process.env.PG_URI,
+    dialect: 'postgres',
+    username: 'postgres',
+    password: 'x'
+  })
+
+    try {
+        sequelize.authenticate() 
+        console.log(`Connected with Sequelize at ${process.env.PG_URI}`) 
+    } catch(err) {
+        console.log(`Unable to connect to PG: ${err}`) 
+    }
+*/
+
 // DEPENDENCIES
 const express = require('express')
 const app = express()
@@ -13,8 +30,11 @@ app.get('/', (req, res) => {
         message: 'Welcome to the Tour API'
     })
 })
+// CONTROLLERS 
+const bandsController = require('./controllers/bands_controllers')
+app.use('/bands', bandsController)
 
 // LISTEN
 app.listen(process.env.PORT, () => {
-    console.log(`🎸 Rockin' on port: ${process.env.PORT}`)
+    console.log(`🎸 Rockin' on port: http://localhost:${process.env.PORT}/`)
 })

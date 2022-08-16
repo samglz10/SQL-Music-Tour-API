@@ -1,7 +1,8 @@
 // DEPENDENCIES
 const stages = require('express').Router()
 const db = require('../models')
-const { Stage } = db 
+const events = require('./event_controllers')
+const { Stage, Event  } = db 
 
 //FIND ALL STAGES
 stages.get('/', async (req, res) => {
@@ -14,10 +15,11 @@ stages.get('/', async (req, res) => {
 })
 
 // STAGES BY ID
-stages.get('/:id', async (req, res) => {
+stages.get('/:name', async (req, res) => {
     try {
         const foundStage = await Stage.findOne({
-            where: {stage_id: req.params.id}
+            where: {name: req.params.name},
+            include: {model: Event, as: "stage_events"}
         })
         res.status(200).json(foundStage)
     } catch (error) {
@@ -72,3 +74,5 @@ stages.delete('/:id', async (req, res) => {
         }
 
 })
+
+module.exports = stages

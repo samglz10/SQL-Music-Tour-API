@@ -1,7 +1,7 @@
 // DEPENDENCIES
 const bands = require('express').Router()
 const db = require('../models')
-const { Band } = db 
+const { Band, MeetGreet } = db 
 // FIND ALL BANDS
 bands.get('/', async (req, res) => {
     try {
@@ -12,10 +12,13 @@ bands.get('/', async (req, res) => {
     }
 })
 //BAND BY ID
-bands.get('/:id', async (req, res) => {
+bands.get('/:name', async (req, res) => {
     try {
         const foundBand = await Band.findOne({
-            where: {band_id: req.params.id}
+            where: {name: req.params.name},
+            include: {model: MeetGreet,
+            as: "meet greets"
+            }
         })
         res.status(200).json(foundBand)
     } catch (error) {

@@ -1,7 +1,7 @@
 //DEPENDENCIES
 const events = require ('express').Router()
 const db = require('../models')
-const { Event } = db
+const { Event, Stage, SetTime, MeetGreet } = db
 
 //FIND ALL EVENTS -SET TO ASCENDING DATE?
 events.get('/',async (req,res)=> {
@@ -14,10 +14,15 @@ events.get('/',async (req,res)=> {
 })
 
 //EVENT BY ID -SET TO ASCENDING DATE?
-events.get('/:id', async(req,res)=> {
+events.get('/:name', async(req,res)=> {
     try {
         const foundEvent =await Event.findOne({
-            where: {event_id:req.params.id }
+            where: {name:req.params.name},
+            include: [
+                {model: Stage, as: "stages"}, 
+                {model: SetTime, as: "set_times"}, 
+                {model: MeetGreet, as: "meet_greets"}
+            ]
         })
         res.status(200).json(foundEvent)
     } catch (error) {
@@ -41,7 +46,7 @@ events.post('/', async (req,res) => {
 })
 
 //UPDATE AN EVENT --SET TO ASCENDING DATE?
-bands.put('/:id', async (req,res) => {
+events.put('/:id', async (req,res) => {
     try {
         const updatedEvents = await Event.update(req.body, {
             where: {
@@ -57,7 +62,7 @@ bands.put('/:id', async (req,res) => {
 })
 
 //DELETE AN EVENT --SET TO ASCENDING DATE?
-events.delete('/:id', async, (req,res) => {
+events.delete('/:id', async (req,res) => {
     try {
         const deletedEvents = await Event.destroy({
             where: {
